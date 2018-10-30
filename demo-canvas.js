@@ -1,0 +1,57 @@
+const IntentDecider = require("./IntentDecider")
+
+const decider = new IntentDecider();
+
+
+exports.handler = async function (event, context) {
+  console.log('Event', JSON.stringify(event));
+
+  return decider.handleRequest(event);
+};
+
+// #############################################################################
+// # Utilities
+// #############################################################################
+function elicitSlot(intentName, slots, slotToElicit, message) {
+  return {
+    sessionAttributes: {},
+    dialogAction: {
+      type: 'ElicitSlot',
+      intentName,
+      slots,
+      slotToElicit,
+      message: { contentType: 'PlainText', content: message },
+    },
+  };
+}
+
+function close(sessionAttributes, message) {
+  return {
+    sessionAttributes,
+    dialogAction: {
+      type: 'Close',
+      "fulfillmentState": "Fulfilled",
+      message: { contentType: 'PlainText', content: message },
+    },
+  };
+}
+
+function delegate(slots) {
+  return {
+    sessionAttributes: {},
+    dialogAction: {
+      type: 'Delegate',
+      slots,
+    }
+  };
+}
+
+
+function chooseRestaurant(time, deliveryMode) {
+  if(!time || !deliveryMode) {
+    return "Missing parameter";
+  }
+
+  const resto = ["Chez Joe", "Chez Mario", "Tante Micheline"];
+  return resto[Math.floor(Math.random() * resto.length)];
+}
