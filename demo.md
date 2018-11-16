@@ -1,5 +1,6 @@
 Création du bot "Restaurant" dans l'IHM
 
+# Amazon LEX
 ## Intent Lunch_demo
 1. Création de l'intent "ChooseRestaurant_demo"  
 2. Explication des utterances et ajout de deux phrases
@@ -101,3 +102,34 @@ Création du bot "Restaurant" dans l'IHM
     
     
 5. Tester le chatbot
+
+# Dialogflow
+1. Vincent : Dialogflow et Lex partagent les mêmes concepts (Montrer un Intent)
+
+
+**Speaker 2 : je suis rassuré je retrouve les mêmes concepts**
+
+2. Acquisser et montrer l'interface de tests à droite du chatbot et le tester
+
+
+**Speaker 2 : demander d'afficher une image à la place du nom du restaurant**
+
+3. Expliquer le concept de Rich Message
+    * Aller dans le fulfilment et montrer la condition sur time pour rassurer les participants 
+    * Décommenter le code
+    * Déployer le code
+
+**Speaker 2 : Si je demande à ton bot "ou mange t'on", il sait me répondre ?**
+
+4. Présenter le training
+
+5. Tester le chat bot pour montrer le rich message une fois la fonction déployée
+
+**Speaker 2 : Il se passe quoi si je demande à ton chatbot l'âge qu'il a ?**
+
+6. Présenter le small talk
+
+**Speaker 2 : tous les xebians sont sur slack, il serait bien de le déployer**
+
+7. Présenter les intégrations
+
