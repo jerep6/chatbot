@@ -2,7 +2,6 @@ const IntentDecider = require("./IntentDecider")
 
 const decider = new IntentDecider();
 
-
 exports.handler = async function (event, context) {
   console.log('Event', JSON.stringify(event));
 
@@ -47,9 +46,13 @@ function delegate(slots) {
 }
 
 
-function chooseRestaurant(time, deliveryMode) {
-  if(!time || !deliveryMode) {
-    return "Missing parameter";
+function chooseRestaurant(time, restaurantType) {
+  if(!time) {
+    return "Missing parameter 'Time'";
+  }
+
+  if(!restaurantType) {
+    return "Missing parameter 'RestaurantType'";
   }
 
   const resto = ["Chez Joe", "Chez Mario", "Tante Micheline"];

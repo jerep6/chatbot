@@ -1,10 +1,9 @@
 const IntentDecider = require("./IntentDecider")
 
 const decider = new IntentDecider();
-decider.addDialogCodeHook("BookRestaurant", validateBookingIntent);
-decider.addFulfillmentCodeHook("BookRestaurant", bookingRestaurantFulfilment);
-
-decider.addFulfillmentCodeHook("AnotherRestaurant_fallback", anotherRestaurant);
+decider.addDialogCodeHook("ChooseRestaurant_demo", validate);
+decider.addFulfillmentCodeHook("ChooseRestaurant_demo", fulfill);
+decider.addFulfillmentCodeHook("AnotherRestaurant", another);
 
 exports.handler = async function (event, context) {
   console.log('Event', JSON.stringify(event));
@@ -15,47 +14,40 @@ exports.handler = async function (event, context) {
 // #############################################################################
 // # BookRestaurant
 // #############################################################################
-async function validateBookingIntent(event) {
-  const time = event.currentIntent.slots.Time;
+async function fulfill(event) {
+  const slots = event.currentIntent.slots;
+  const time = slots.Time;
+  const type = slots.RestaurantType;
+
+  const resto = chooseRestaurant(time, type);
+
+  return close({Time: time, RestaurantType: type}, "Your restaurant is " + resto);
+}
+
+async function validate(event) {
+  const slots = event.currentIntent.slots;
+  const time = slots.Time;
 
   if(time && (time < "12:00" || time > "14:00")) {
-    return elicitSlot(event.sessionAttributes, event.currentIntent.name, event.currentIntent.slots, "Time", "Reservation must be between 12AM and 2PM");
+    return elicitSlot(event.currentIntent.name, event.currentIntent.slots, "Time", "Time must be between 12 and 14");
   }
 
-  console.log('All slots are valid');
-  return delegate(event.sessionAttributes, event.currentIntent.slots);
-}
-
-
-async function bookingRestaurantFulfilment(event) {
-  console.log('fulfilment');
-
-  const time = event.currentIntent.slots.Time;
-  const deliveryMode = event.currentIntent.slots.DeliveryMode;
-
-  const resto = chooseRestaurant(time, deliveryMode);
-  event.sessionAttributes['Time'] = time;
-  event.sessionAttributes['restaurant_name'] = chooseRestaurant(time, deliveryMode);
-
-  return close(event.sessionAttributes, "Your restaurant is "+ resto);
+  return delegate(slots);
 }
 
 
 // #############################################################################
-// # AnotherBooking
+// # AnotherRestaurant
 // #############################################################################
-async function anotherRestaurant(event) {
+async function another(event) {
+  const slots = event.sessionAttributes;
+  const time = slots.Time;
+  const type = slots.RestaurantType;
 
-  const time = event.sessionAttributes['Time'];
-  const deliveryMode = event.sessionAttributes['DeliveryMode'];
-  console.log('---------------------------', time, deliveryMode);
-  const resto = chooseRestaurant(time, deliveryMode);
+  const resto = chooseRestaurant(time, type);
 
-  return close(event.sessionAttributes, "Your new restaurant is "+ resto);
+  return close(slots, "Your NEW restaurant is " + resto);
 }
-
-
-
 
 
 // #############################################################################
